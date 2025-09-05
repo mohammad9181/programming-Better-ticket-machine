@@ -18,14 +18,31 @@ public class TicketMachine
     // The total amount of money collected by this machine.
     private int total;
 
+    private boolean discount;
+    
+    private int discountedPrice;
+    
+    public void SelectDiscount()
+    {
+        discount = true;
+        System.out.println("Discount Selected");
+    }
     /**
      * Create a machine that issues tickets of the given price.
      */
     public TicketMachine(int cost)
     {
-        price = cost;
-        balance = 0;
+        discountedPrice = cost/2;
+        if(discount == true)
+        {
+            price = discountedPrice;
+        }
+        else
+        {
+            price = cost;
+        }
         total = 0;
+        balance = 0;
     }
 
     /**
@@ -33,7 +50,14 @@ public class TicketMachine
      */
     public int getPrice()
     {
-        return price;
+        if(discount == true)
+        {
+            return discountedPrice;
+        }
+        else
+        {
+            return price;
+        }
     }
 
     /**
@@ -68,25 +92,58 @@ public class TicketMachine
     public void printTicket()
     {
         int amountLeftToPay;
-        amountLeftToPay = price - balance;
-        if(amountLeftToPay <= 0) {
-            // Simulate the printing of a ticket.
-            System.out.println("##################");
-            System.out.println("# The BlueJ Line");
-            System.out.println("# Ticket");
-            System.out.println("# " + price + " cents.");
-            System.out.println("##################");
-            System.out.println();
+        
+        if(discount == true)
+        {
+            amountLeftToPay = discountedPrice - balance;
+            
+            if(amountLeftToPay <= 0) {
+                // Simulate the printing of a ticket.
+                System.out.println("##################");
+                System.out.println("# The BlueJ Line (discounted)");
+                System.out.println("# Ticket");
+                System.out.println("# " + discountedPrice + " cents.");
+                System.out.println("##################");
+                System.out.println();
 
-            // Update the total collected with the price.
-            total = total + price;
-            // Reduce the balance by the price.
-            balance = balance - price;
+                // Update the total collected with the price.
+                total = total + price;
+                // Reduce the balance by the price.
+                balance = balance - price;
+                
+                discount = false;
+                System.out.println("You saved " + discountedPrice + "!");
+            }
+            else
+            {
+            System.out.println("Not enough currency, pay " + amountLeftToPay + " more to print.");
+            }
         }
         else
         {
+            amountLeftToPay = price - balance;
+            
+            if(amountLeftToPay <= 0) {
+                // Simulate the printing of a ticket.
+                System.out.println("##################");
+                System.out.println("# The BlueJ Line");
+                System.out.println("# Ticket");
+                System.out.println("# " + price + " cents.");
+                System.out.println("##################");
+                System.out.println();
+
+                // Update the total collected with the price.
+                total = total + price;
+                // Reduce the balance by the price.
+                balance = balance - price;
+            }
+            else
+            {
             System.out.println("Not enough currency, pay " + amountLeftToPay + " more to print.");
+            }
         }
+        
+        
     }
 
     /**
@@ -105,15 +162,33 @@ public class TicketMachine
     
     public void affordable(int budget)
     {
-        if(budget < price) 
+        if(discount == true)
         {
+            if(budget < discountedPrice) 
+            {
             System.out.println("Too Expensive, you have " + budget);
-        }
-        else 
-        {
+            }
+            else 
+            {
             System.out.println("just right, you have " + budget);
+            }
         }
+        else
+        {
+            if(budget < price) 
+            {
+            System.out.println("Too Expensive, you have " + budget);
+            }
+            else 
+            {
+            System.out.println("just right, you have " + budget);
+            }
+        }
+            
     }
+
+        
+
     
     public int emptyMachine()
     {
